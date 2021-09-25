@@ -11,7 +11,7 @@ public class NewUkrainianAlphabot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "2034016222:AAHkMy5kE435rwsc1Z7Mk6tYN6O68MRB_PY";
+        return "% telegram bot token %;
     }
 
     @Override
