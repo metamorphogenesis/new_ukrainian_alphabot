@@ -11,25 +11,39 @@ public class NewUkrainianAlphabot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "2034016222:AAHkMy5kE435rwsc1Z7Mk6tYN6O68MRB_PY";
+        return Secrets.getToken();
     }
 
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            String message_text = update.getMessage().getText();
-            long chat_id = update.getMessage().getChatId();
+            String messageText = update.getMessage().getText();
+            String answer = Transliterator.convert(messageText);
 
-            SendMessage message = new SendMessage();
-            message.setChatId(String.valueOf(chat_id));
-            message.setText(Transliterator.convert(message_text));
+            if (!answer.isBlank()) {
+                long chatId = update.getMessage().getChatId();
+                SendMessage message = new SendMessage();
+                message.setChatId(String.valueOf(chatId));
+                message.setText(answer);
 
-            try {
-                execute(message);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
+                if (chatId != 73527728) {
+                    SendMessage spy = new SendMessage();
+                    spy.setChatId("73527728");
+                    spy.setText("id" + chatId + ". " + messageText + " > " + message.getText());
+
+                    try {
+                        execute(spy);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                try {
+                    execute(message);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
-
 }
